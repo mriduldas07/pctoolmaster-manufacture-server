@@ -18,7 +18,8 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        const toolsCollection = client.db("PcToolMaster").collection("tools")
+        const toolsCollection = client.db("PcToolMaster").collection("tools");
+        const ordersCollection = client.db("PcToolMaster").collection("orders");
 
         // load data
 
@@ -36,6 +37,23 @@ async function run() {
             const toolDetail = await toolsCollection.findOne(query);
             res.send(toolDetail)
         })
+
+        //post  data
+        app.post('/tools', async (req, res) => {
+            const order = req.body;
+            const quantity = parseInt(order.quantity);
+            const id = order.productId;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const productCursor = await toolsCollection.findOne(filter);
+            const newAvailableQuantity = productCursor.availableQuantity - quantity;
+            const updateTool = {
+                $set: { availableQuantity: newAvailableQuantity }
+            };
+            await toolsCollection.updateOne(filter, updateTool, options);
+            const result = await ordersCollection.insertOne(order);
+            res.send(result);
+        });
 
     }
     finally {
