@@ -55,6 +55,22 @@ async function run() {
             res.send(result);
         });
 
+        //customer orders showing Dashboard for user
+        app.get("/orders/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { customer_email: email };
+            const result = await ordersCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // order cancel by user
+        app.delete("/orderCancel/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { productId: id };
+            const result = await ordersCollection.deleteOne(query);
+            res.send(result);
+        })
+
     }
     finally {
 
