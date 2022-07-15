@@ -20,6 +20,8 @@ async function run() {
         await client.connect();
         const toolsCollection = client.db("PcToolMaster").collection("tools");
         const ordersCollection = client.db("PcToolMaster").collection("orders");
+        const usersCollection = client.db("PcToolMaster").collection("user");
+        const reviewsCollection = client.db("PcToolMaster").collection("review");
 
         // load data
 
@@ -68,6 +70,13 @@ async function run() {
             const id = req.params.id;
             const query = { productId: id };
             const result = await ordersCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // submit customer review
+        app.post("/review", async (req, res) => {
+            const review = req.body;
+            const result = await reviewsCollection.insertOne(review);
             res.send(result);
         })
 
