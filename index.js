@@ -78,8 +78,22 @@ async function run() {
             const review = req.body;
             const result = await reviewsCollection.insertOne(review);
             res.send(result);
-        })
+        });
+        //get customer review
+        app.get("/review/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = { reviewEmail: email };
+            const result = await reviewsCollection.find(filter).toArray();
+            res.send(result);
+        });
 
+        // delete customer review
+        app.delete("/review/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await reviewsCollection.deleteOne(filter);
+            res.send(result);
+        })
     }
     finally {
 
