@@ -88,6 +88,10 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/review", async (req, res) => {
+            const reviews = await reviewsCollection.find().toArray();
+            res.send(reviews);
+        })
         // submit customer review
         app.post("/review", async (req, res) => {
             const review = req.body;
