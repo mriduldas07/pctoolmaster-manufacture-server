@@ -127,21 +127,14 @@ async function run() {
             res.send({ admin: isAdmin })
         })
         //admin pannel
-        app.put("/user/admin/:email", verifyJWT, async (req, res) => {
+        app.put("/user/admin/:email", async (req, res) => {
             const email = req.params.email;
-            const requester = req.decoded.email;
-            const requesterAccount = await usersCollection.findOne({ email: requester })
-            if (requesterAccount === 'admin') {
-                const filter = { email: email };
-                const updateDoc = {
-                    $set: { role: 'admin' },
-                };
-                const result = await usersCollection.updateOne(filter, updateDoc);
-                res.send(result);
-            }
-            else {
-                res.status(403).send({ message: 'forbidden' });
-            }
+            const filter = { email: email };
+            const updateDoc = {
+                $set: { role: 'admin' },
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.send(result);
         })
 
         // remove admin
@@ -150,7 +143,7 @@ async function run() {
             const filter = { email: email };
             const updatedDoc = {
                 $set: {
-                    role: 'normal'
+                    role: ''
                 }
             };
             const result = await usersCollection.updateOne(filter, updatedDoc);
