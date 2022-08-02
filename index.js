@@ -87,7 +87,7 @@ async function run() {
             const result = await ordersCollection.deleteOne(query);
             res.send(result);
         })
-
+        //get reeview for home
         app.get("/review", async (req, res) => {
             const reviews = await reviewsCollection.find().toArray();
             res.send(reviews);
@@ -142,6 +142,19 @@ async function run() {
             else {
                 res.status(403).send({ message: 'forbidden' });
             }
+        })
+
+        // remove admin
+        app.put("/user/removeAdmin/:email", async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const updatedDoc = {
+                $set: {
+                    role: 'normal'
+                }
+            };
+            const result = await usersCollection.updateOne(filter, updatedDoc);
+            res.send(result);
         })
         // put all user
         app.put("/user/:email", async (req, res) => {
