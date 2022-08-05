@@ -76,7 +76,14 @@ async function run() {
         app.get("/allOrders", async (req, res) => {
             const result = await ordersCollection.find().toArray();
             res.send(result)
-        })
+        });
+        //order delevery by admin (delete)
+        app.delete("/orderDelivery/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(filter);
+            res.send(result);
+        });
 
         //customer orders showing Dashboard for user
         app.get("/orders/:email", async (req, res) => {
