@@ -72,6 +72,12 @@ async function run() {
             res.send(result);
         });
 
+        // customer all orders (for admin)
+        app.get("/allOrders", async (req, res) => {
+            const result = await ordersCollection.find().toArray();
+            res.send(result)
+        })
+
         //customer orders showing Dashboard for user
         app.get("/orders/:email", async (req, res) => {
             const email = req.params.email;
