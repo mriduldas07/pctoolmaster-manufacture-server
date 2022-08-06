@@ -42,10 +42,16 @@ async function run() {
         // load data
         app.get('/tools', async (req, res) => {
             const query = {};
-            const tools = await toolsCollection.find(query).toArray();
+            const tools = (await toolsCollection.find(query).limit(6).toArray()).reverse();
             res.send(tools)
         })
 
+        // add tools by admin
+        app.post("/addTool", async (req, res) => {
+            const tool = req.body;
+            const result = await toolsCollection.insertOne(tool);
+            res.send(result)
+        })
 
         // load data for id
         app.get("/tools/:id", async (req, res) => {
