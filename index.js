@@ -39,7 +39,7 @@ async function run() {
         const usersCollection = client.db("PcToolMaster").collection("user");
         const reviewsCollection = client.db("PcToolMaster").collection("review");
 
-        // load data
+        // load data for home page
         app.get('/tools', async (req, res) => {
             const query = {};
             const tools = (await toolsCollection.find(query).limit(6).toArray()).reverse();
@@ -59,8 +59,13 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const toolDetail = await toolsCollection.findOne(query);
             res.send(toolDetail)
-        })
+        });
 
+        // load tools for admin panel
+        app.get("/tools", async (req, res) => {
+            const tools = await toolsCollection.find({}).toArray();
+            res.send(tools);
+        });
         //post  data
         app.post('/tools', async (req, res) => {
             const order = req.body;
