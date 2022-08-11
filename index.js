@@ -51,7 +51,28 @@ async function run() {
             const tool = req.body;
             const result = await toolsCollection.insertOne(tool);
             res.send(result)
-        })
+        });
+
+        //update tool
+        app.put("/updateTool/:id", async (req, res) => {
+            const id = req.params.id;
+            const tool = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: tool,
+            };
+            const result = await toolsCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+        // delete product by admin
+        app.delete("/deleteTool/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await toolsCollection.deleteOne(filter);
+            res.send(result);
+        });
 
         // load data for id
         app.get("/tools/:id", async (req, res) => {
