@@ -46,6 +46,12 @@ async function run() {
             res.send(tools)
         })
 
+        app.get("/allTools", async (req, res) => {
+            const query = {};
+            const tools = await toolsCollection.find(query).toArray();
+            res.send(tools)
+        })
+
         // add tools by admin
         app.post("/addTool", async (req, res) => {
             const tool = req.body;
@@ -170,7 +176,7 @@ async function run() {
             const user = await usersCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
             res.send({ admin: isAdmin })
-        })
+        });
         //admin pannel
         app.put("/user/admin/:email", async (req, res) => {
             const email = req.params.email;
